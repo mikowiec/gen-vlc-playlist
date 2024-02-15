@@ -1,8 +1,8 @@
 import xml.etree.ElementTree as xml
 import os
 import pprint
-import inspect
-from itertools import groupby
+#import inspect
+#from itertools import groupby
 import re
 
 # **********************************************************************************
@@ -12,6 +12,8 @@ ext_list = ['.mp4', '.mkv', '.avi', '.flv', '.mov', '.wmv', '.vob', '.mpg','.3gp
 check_subdirectories = True #False        #Set false to get files only from cwd.
 check_sort_file_prefix4 = True      # sort files with prefix ('1. file', `10. file', '100. file')
 pat_sort_file_prefix4 = r"\/\d+\."  # regex pattern
+check_playlist_web = True
+addr_playlist_web = 'http://192.168.1.17:8088'
 
 # **********************************************************************************
 
@@ -110,8 +112,17 @@ class Videos:
             return video_files
         
     
-
-
+    # `C:\Users\videos` to `http://addr:port/videos`
+    def web_paths(self, video_files):
+    #Add server addr to files as required in vlc playlist file. 
+        web_files = []
+        # root directory for web server - current directory
+        webroot = ('file:///' + os.getcwd() ).replace('\\','/')
+        # 
+        for index in range(len(video_files)):
+            file_url = (addr_playlist_web + video_files[index]).replace(webroot, '')
+            web_files.append(file_url)
+        return web_files
 
 
 
@@ -124,33 +135,30 @@ def printobj(xobj):
 
 def main():
     playlist = Playlist()
+    playlist_web = Playlist()
     videos = Videos()
-    # pprint("out:", str(vars(videos)).split(",")[1:])
-    #
-    #ok
-    #printobj(videos)
-    #
-    #ok. methods name
-    #help(videos)
     
 
     video_files = videos.get_videos()
-    #printobj(video_files)
-    #
     video_paths = videos.edit_paths(video_files)
-    #
     video_sorted = videos.sort_videos(video_paths)
-    #printobj(video_sorted)
+    web_files = videos.web_paths(video_sorted)
     
-   
+    # write song.xspf local playlist   
     for path in video_sorted:    # video_paths
         playlist.add_track(path)
-    
+    #
     playlist_xml = playlist.get_playlist()
     with open('songs.xspf','w') as mf:
         mf.write(xml.tostring(playlist_xml).decode('utf-8'))
 
-
+    # write songweb.xspf web playlist   
+    for path in web_files:    # video_paths
+        playlist_web.add_track(path)
+    #
+    playlist_xml = playlist_web.get_playlist()
+    with open('songsweb.xspf','w') as mf:
+        mf.write(xml.tostring(playlist_xml).decode('utf-8'))
 
 
 
