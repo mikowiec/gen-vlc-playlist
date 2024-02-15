@@ -13,7 +13,7 @@ check_subdirectories = True #False        #Set false to get files only from cwd.
 check_sort_file_prefix4 = True      # sort files with prefix ('1. file', `10. file', '100. file')
 pat_sort_file_prefix4 = r"\/\d+\."  # regex pattern
 check_playlist_web = True
-addr_playlist_web = 'http://192.168.1.17:8088'
+addr_playlist_web = 'http://192.168.1.1:8080'
 
 # **********************************************************************************
 
