@@ -21,6 +21,7 @@ Updated to automatically go through subdirectories as well. Can be disabled from
 - `check_subdirectories`: True, False. Subdirectories will be scanned
 - `check_sort_file_prefix4`: Playlist will be sorted, with next pattern ('1. file', `10. file', '100. file')
 - `pat_sort_file_prefix4`: Regexp for pattern described for
+- `addr_playlist_web`: web server address for web playlist
 
 
 ### Known problems:
